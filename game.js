@@ -1,6 +1,12 @@
-import { SNAKE_SPEED } from './snake.js';
+import {
+  update as updateSnake,
+  draw as drawSnake,
+  SNAKE_SPEED,
+} from './snake.js';
+import { update as updateFood, draw as drawFood } from './food.js';
 
 let lastRenderTime = 0;
+const gameBoard = document.getElementById('game-board');
 // curTime is exact time when our function runs  border: .25vmin solid black;
 // we want to be recalling this function immidiately so we get another loop.
 // This function will loop continously
@@ -34,6 +40,15 @@ function main(curTime) {
 
 window.requestAnimationFrame(main);
 
-function update() {}
+function update() {
+  updateSnake();
+  updateFood();
+}
 
-function draw() {}
+function draw() {
+  // We clear previous divs in game board!
+  gameBoard.innerHTML = '';
+  // and render snake body
+  drawSnake(gameBoard);
+  drawFood(gameBoard);
+}
