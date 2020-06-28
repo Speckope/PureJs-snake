@@ -1,7 +1,10 @@
+import { onSnake, expandSnake } from './snake.js';
+import { randomGridPosition } from './grid.js';
+
 //Important note! - CSS grid starts from 1, so we move between 1 and 21!
 // 0 is technically outside the grid!
 
-let food = { x: 10, y: 1 };
+let food = getRandomFoodPosition();
 // how much snake grows as it eats food
 const EXPANSION_RATE = 1;
 
@@ -10,7 +13,7 @@ export function update() {
   if (onSnake(food)) {
     expandSnake(EXPANSION_RATE);
     // After expanding snake we set foot to new position
-    food = { x: 20, y: 10 };
+    food = getRandomFoodPosition();
   }
 }
 
@@ -22,7 +25,12 @@ export function draw(gameBoard) {
   gameBoard.appendChild(foodElement);
 }
 
-// function taking expand rate and adding segments
-export function expandSnake(amount) {
-  newSegments += amount;
+// This function will loop through position and while its not finish untill it finds
+// position thats not on snake
+function getRandomFoodPosition() {
+  let newFoodPosition;
+  while (newFoodPosition == null || onSnake(newFoodPosition)) {
+    newFoodPosition = randomGridPosition();
+  }
+  return newFoodPosition;
 }

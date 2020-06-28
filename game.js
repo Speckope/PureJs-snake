@@ -2,15 +2,27 @@ import {
   update as updateSnake,
   draw as drawSnake,
   SNAKE_SPEED,
+  getSnakeHead,
+  snakeIntersection,
 } from './snake.js';
 import { update as updateFood, draw as drawFood } from './food.js';
+import { outsideGrid } from './grid.js';
 
 let lastRenderTime = 0;
+let gameOver = false;
 const gameBoard = document.getElementById('game-board');
 // curTime is exact time when our function runs  border: .25vmin solid black;
 // we want to be recalling this function immidiately so we get another loop.
 // This function will loop continously
 function main(curTime) {
+  if (gameOver) {
+    // when we return here we dont run rest of main code!!
+    if (confirm('You lost. Press ok to restart,')) {
+      // this refreshed our page, therefore restarting our game!
+      window.location = '/';
+    }
+    return;
+  }
   const secondsSinceLastRender = (curTime - lastRenderTime) / 1000;
   // It tells us when we can render next frame
   // we r requesting a frame to animate a game
@@ -43,6 +55,7 @@ window.requestAnimationFrame(main);
 function update() {
   updateSnake();
   updateFood();
+  checkDeath();
 }
 
 function draw() {
@@ -51,4 +64,10 @@ function draw() {
   // and render snake body
   drawSnake(gameBoard);
   drawFood(gameBoard);
+}
+
+// This will set global gameOver variable and check whether snake head is
+// outside of the grid or snakeHead intersects its body(both mean loosing)
+function checkDeath() {
+  gameOver = outsideGrid(getSnakeHead()) || snakeIntersection();
 }
